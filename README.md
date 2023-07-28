@@ -1,0 +1,1 @@
+# Spock IntelliJ Plugin
