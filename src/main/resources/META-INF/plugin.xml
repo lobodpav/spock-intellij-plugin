@@ -1,0 +1,33 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>io.github.lobodpav.spock</id>
+    <name>Spock framework support</name>
+    <vendor>Pavel Lobodinský</vendor>
+    <description>
+        <![CDATA[
+            <p>
+                Provides support for the amazing <a href="https://spockframework.org">Spock testing framework</a>.
+            </p>
+            <p>
+                Features:
+            </p>
+            <ul>
+                <li>Validation of block names, their order and completeness (e.g. invalid blocks, missing `then` blocks, etc.)</li>
+            </ul>
+            <p>
+                This is a humble first release. Stay tuned for more features.
+            </li>
+        ]]>
+    </description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>org.intellij.groovy</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection language="Groovy" groupPath="Groovy" groupName="Spock"
+                         shortName="BlockInspection" displayName="Block order and completeness" enabledByDefault="true"
+                         level="ERROR" implementationClass="io.github.lobodpav.spock.block.BlockInspection"/>
+    </extensions>
+</idea-plugin>

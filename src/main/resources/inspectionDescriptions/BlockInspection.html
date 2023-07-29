@@ -1,0 +1,26 @@
+<html lang="en">
+<body>
+    <p>
+        Reports incorrect block order as wel as missing block counterparts.
+    </p>
+    <p>
+        Examples:
+    </p>
+    <pre>
+        <code>
+            def "`given` is not the first block"() {
+                expect:
+                1 == 1
+
+                given: // Error reported here
+                def value = 1
+            }
+
+            def "Missing `then` block"() {
+                when: // Error reported here
+                def value = 2
+            }
+        </code>
+    </pre>
+</body>
+</html>
