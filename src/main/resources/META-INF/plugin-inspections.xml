@@ -1,0 +1,7 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection language="Groovy" groupPath="Groovy" groupName="Spock"
+                         shortName="BlockInspection" displayName="Block order and completeness" enabledByDefault="true"
+                         level="ERROR" implementationClass="io.github.lobodpav.spock.inspection.block.BlockInspection"/>
+    </extensions>
+</idea-plugin>

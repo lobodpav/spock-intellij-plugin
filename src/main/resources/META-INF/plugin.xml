@@ -1,5 +1,4 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>io.github.lobodpav.spock</id>
     <name>Spock framework support</name>
     <vendor>Pavel Lobodinský</vendor>
@@ -13,9 +12,10 @@
             </p>
             <ul>
                 <li>Validation of block names, their order and completeness (e.g. invalid blocks, missing `then` blocks, etc.)</li>
+                <li>Creation of new Spock Specification using a New File action</li>
             </ul>
             <p>
-                This is a humble first release. Stay tuned for more features.
+                Stay tuned for more features.
             </li>
         ]]>
     </description>
@@ -26,8 +26,21 @@
     <depends>org.intellij.groovy</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <localInspection language="Groovy" groupPath="Groovy" groupName="Spock"
-                         shortName="BlockInspection" displayName="Block order and completeness" enabledByDefault="true"
-                         level="ERROR" implementationClass="io.github.lobodpav.spock.inspection.block.BlockInspection"/>
+        <fileType implementationClass="io.github.lobodpav.spock.type.SpecificationFileType"
+                  language="Groovy" order="first" name="SpockSpecification"
+                  extensions="spock"/>
+
+        <iconProvider implementation="io.github.lobodpav.spock.icon.SpecificationIconProvider"/>
     </extensions>
+
+    <actions>
+        <action id="io.github.lobodpav.spock.action.NewSpockSpecificationAction"
+                class="io.github.lobodpav.spock.action.NewSpockSpecificationAction"
+                text="Spock Specification" description="Creates a new Spock Specification">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="Groovy.NewClass"/>
+        </action>
+    </actions>
+
+    <xi:include href="plugin-inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="plugin-templates.xml"   xpointer="xpointer(/idea-plugin/*)"/>
 </idea-plugin>

@@ -1,0 +1,8 @@
+#if (${PACKAGE_NAME} && $PACKAGE_NAME != "" )package ${PACKAGE_NAME}
+#end
+
+import spock.lang.Specification
+
+#parse("File Header.java")
+class ${NAME} extends Specification {
+}
