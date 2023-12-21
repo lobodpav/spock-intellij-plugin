@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <internalFileTemplate name="Spock Specification"/>
+    </extensions>
+</idea-plugin>

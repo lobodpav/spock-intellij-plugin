@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub workflows
   - Generate `plugin.xml` description from the [README](README.md) to avoid duplicities
   - Release automation (see https://github.com/JetBrains/intellij-platform-plugin-template/blob/main/.github/workflows/release.yml) 
-- Test templates with reasonable defaults (`create a new test` for a class)
-- A `Spock Specification` menu item to create a new class in the project tree
+- Creation of new tests for classes (`Navigate -> Go To Test -> Create new test`)
+  - Test templates with reasonable defaults for classes and feature methods' names
 - Highlighting
   - `when`, `then`, `and`, and `then` sections
   - Colour override in settings
@@ -34,6 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - Split long tables into two
 
 ## [0.2.0] - 202?-??-??
+  
+### Added
+ 
+- Spock Specification file template
+- `Spock Specification` action for quick Specification creation (`Project -> New -> Spock Specification`)
 
 ## [0.1.0] - 2023-12-20
 

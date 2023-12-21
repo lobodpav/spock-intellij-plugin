@@ -1,0 +1,9 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType implementationClass="io.github.lobodpav.spock.type.SpecificationFileType"
+                  language="Groovy" order="first" name="SpockSpecification"
+                  extensions="spock"/>
+
+        <iconProvider implementation="io.github.lobodpav.spock.icon.SpecificationIconProvider"/>
+    </extensions>
+</idea-plugin>

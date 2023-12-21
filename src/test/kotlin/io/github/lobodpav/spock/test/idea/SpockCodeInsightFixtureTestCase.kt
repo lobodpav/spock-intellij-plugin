@@ -1,7 +1,6 @@
 package io.github.lobodpav.spock.test.idea
 
 import com.intellij.testFramework.LightProjectDescriptor
-import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 
@@ -19,7 +18,7 @@ class SpockCodeInsightFixtureTestCase(
 ) : LightJavaCodeInsightFixtureTestCase() {
 
     override fun getProjectDescriptor(): LightProjectDescriptor {
-        val projectDescriptor = DefaultLightProjectDescriptor()
+        val projectDescriptor = SpockLightProjectDescriptor { fixture }
 
         // Adds Spock dependency to avoid ERROR inspections about missing spock libraries (e.g. `Specification`)
         if (groovyOnClasspath) projectDescriptor.withRepositoryLibrary("org.apache.groovy:groovy:4.0.13", false)
