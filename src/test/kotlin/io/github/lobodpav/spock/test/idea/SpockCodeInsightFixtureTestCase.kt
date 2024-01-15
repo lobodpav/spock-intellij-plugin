@@ -1,27 +1,35 @@
 package io.github.lobodpav.spock.test.idea
 
 import com.intellij.testFramework.LightProjectDescriptor
-import com.intellij.testFramework.fixtures.CodeInsightTestFixture
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor
+import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 
 /**
  * Since Spock Specifications cannot extend both [spock.lang.Specification] and
  * [LightJavaCodeInsightFixtureTestCase], this wrapper allows for injection of the
  * fixture into specifications via the [WithIdea] annotation.
+ *
+ * The [groovyOnClasspath] and [spockOnClasspath] arguments allow custom setup
+ * for [com.intellij.openapi.actionSystem.AnAction] testing.
  */
-class SpockCodeInsightFixtureTestCase : LightJavaCodeInsightFixtureTestCase() {
+class SpockCodeInsightFixtureTestCase(
+    private val groovyOnClasspath: Boolean = true,
+    private val spockOnClasspath: Boolean = true,
+) : LightJavaCodeInsightFixtureTestCase() {
 
-    private companion object {
-        private val projectDescriptorWithDependencies = DefaultLightProjectDescriptor()
-            // Adds Spock dependency to avoid ERROR inspections about missing spock libraries (e.g. `Specification`)
-            .withRepositoryLibrary("org.spockframework:spock-core:2.3-groovy-4.0")
+    override fun getProjectDescriptor(): LightProjectDescriptor {
+        val projectDescriptor = DefaultLightProjectDescriptor()
+
+        // Adds Spock dependency to avoid ERROR inspections about missing spock libraries (e.g. `Specification`)
+        if (groovyOnClasspath) projectDescriptor.withRepositoryLibrary("org.apache.groovy:groovy:4.0.13", false)
+        if (spockOnClasspath) projectDescriptor.withRepositoryLibrary("org.spockframework:spock-core:2.3-groovy-4.0", false)
+
+        return projectDescriptor
     }
 
-    val fixture: CodeInsightTestFixture
-        get() = myFixture
-
-    override fun getProjectDescriptor(): LightProjectDescriptor = projectDescriptorWithDependencies
+    val fixture: JavaCodeInsightTestFixture
+        get() = super.myFixture
 
     fun setup() {
         super.setUp()

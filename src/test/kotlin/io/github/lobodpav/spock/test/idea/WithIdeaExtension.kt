@@ -15,13 +15,6 @@ import kotlin.reflect.full.isSubclassOf
  */
 class WithIdeaExtension : IAnnotationDrivenExtension<WithIdea> {
 
-    override fun visitSpecAnnotation(annotation: WithIdea, spec: SpecInfo) {
-        val annotations = spec.getAnnotationsByType(WithIdea::class.java)
-        if (annotations.size > 1) {
-            throw InvalidSpecException("The '@${WithIdea::class.simpleName}' annotation can only be used once within a specification")
-        }
-    }
-
     override fun visitFieldAnnotation(annotation: WithIdea, field: FieldInfo) {
         if (!field.type.kotlin.isSubclassOf(Idea::class)) {
             throw InvalidSpecException("The '@${WithIdea::class.simpleName}' annotation can only be used on '${Idea::class.qualifiedName}' fields")
@@ -34,6 +27,13 @@ class WithIdeaExtension : IAnnotationDrivenExtension<WithIdea> {
         when (field.isShared) {
             true -> bottomSpec.addInterceptor(ideaInterceptor)
             else -> bottomSpec.allFeatures.forEach { it.addIterationInterceptor(ideaInterceptor) }
+        }
+    }
+
+    override fun visitSpec(spec: SpecInfo) {
+        val annotations = spec.fields.mapNotNull { it.getAnnotation(WithIdea::class.java) }
+        if (annotations.size > 1) {
+            throw InvalidSpecException("The '@${WithIdea::class.simpleName}' annotation can only be used once within a specification")
         }
     }
 }
