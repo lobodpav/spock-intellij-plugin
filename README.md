@@ -38,6 +38,15 @@ gradle runPluginVerifier
 gradle signPlugin
 ```
 
+# Release
+
+1. Increment the version in [build.gradle.kts](build.gradle.kts)
+2. Update
+   - [CHANGELOG.md](CHANGELOG.md)
+   - [plugin.xml](src/main/resources/META-INF/plugin.xml)
+3. Update the [CHANGELOG.md](CHANGELOG.md)
+4. Run `op run -- gradle build runPluginVerifier signPlugin publishPlugin`
+
 ## Security
 
 All the signing credentials (key, certificate, password) are configured
