@@ -8,7 +8,7 @@ import javax.swing.Icon
 /**
  * Used solely for Spock templates to have a Spock icon in `Settings -> Editor -> File and Code templates`.
  */
-object SpecificationFileType : LanguageFileType(GroovyLanguage) {
+class SpecificationFileType : LanguageFileType(GroovyLanguage) {
     override fun getName(): String = "SpockSpecification"
 
     override fun getDescription(): String = "Spock specification"

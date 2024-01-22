@@ -1,6 +1,6 @@
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>io.github.lobodpav.spock</id>
-    <name>Spock framework support</name>
+    <name>Spock Framework Support</name>
     <vendor>Pavel Lobodinský</vendor>
     <description>
         <![CDATA[
