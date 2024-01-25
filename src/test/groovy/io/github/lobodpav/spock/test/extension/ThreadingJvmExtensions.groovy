@@ -1,4 +1,4 @@
-package io.github.lobodpav.spock.test
+package io.github.lobodpav.spock.test.extension
 
 import com.intellij.openapi.application.ReadAction
 import groovy.transform.stc.ClosureParams

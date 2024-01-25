@@ -11,7 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Generate `plugin.xml` description from the [README](README.md) to avoid duplicities
   - Release automation (see https://github.com/JetBrains/intellij-platform-plugin-template/blob/main/.github/workflows/release.yml) 
 - Creation of new tests for classes (`Navigate -> Go To Test -> Create new test`)
-  - Test templates with reasonable defaults for classes and feature methods' names
+  - Persisted the New Specification dialog's values to be used as defaults next time
+  - Configurable Spec class name suffix in IntelliJ settings
+  - An IntelliJ settings preference allowing to define test annotation/baseClass mapping to a suffix.
+    - E.g. When test is annotated with @IntegrationSpec, the new test will get an `IntegrationSpec` classname suffix.
+  - Allow generating feature methods for selected class methods
 - Highlighting
   - `when`, `then`, `and`, and `then` sections
   - Colour override in settings
@@ -35,12 +39,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2024-??-??
 
+### Added
+
+- `Go To Test` support for Specifications in Groovy, Java and Kotlin files (`Navigate -> Test`)
+
 ## [0.2.0] - 2024-01-22
   
 ### Added
  
 - Spock Specification file template
-- `Spock Specification` action for quick Specification creation (`Project -> New -> Spock Specification`)
+- Spock Specification action for quick Specification creation (`Project -> New -> Spock Specification`)
 
 ## [0.1.0] - 2023-12-20
 

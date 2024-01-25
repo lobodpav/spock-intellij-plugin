@@ -17,6 +17,11 @@ object SpecificationCreator {
      * Allows specifying [parameters] that will be replaced in the template if the map keys match.
      */
     fun createFromTemplate(psiDirectory: PsiDirectory, className: String, specificationTemplate: SpecificationTemplate, parameters: Map<String, String> = emptyMap()): GrTypeDefinition {
+        specificationTemplate.parameterNames
+            .all { parameters.containsKey(it) }
+            .takeIf { it }
+            ?: error("The '$specificationTemplate' Specification template requires all of these parameters specified: ${specificationTemplate.parameterNames.toList()}")
+
         val fileName = "$className${NewGroovyActionBase.GROOVY_EXTENSION}"
 
         val psiFileFromTemplate = GroovyTemplatesFactory.createFromTemplate(

@@ -9,8 +9,13 @@ package io.github.lobodpav.spock.template
  * See the [official documentation](https://plugins.jetbrains.com/docs/intellij/using-file-templates.html#custom-create-file-from-template-actions)
  * for more details.
  */
-enum class SpecificationTemplate(val fileName: String) {
-    SIMPLE("Spock Specification.spock");
+enum class SpecificationTemplate(val fileName: String, val parameterNames: List<String> = emptyList()) {
+
+    // Registered templates
+    SIMPLE("Spock Specification.spock"),
+
+    // Hidden internal templates
+    CUSTOMISABLE("Customisable Spock Specification.spock", CustomisableTemplateParameter.parameterNames);
 
     companion object {
         fun fromFileName(fileName: String): SpecificationTemplate =

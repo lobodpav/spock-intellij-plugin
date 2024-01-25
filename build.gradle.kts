@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
 
     testImplementation(testLibs.bundles.unit.spec)
+    testRuntimeOnly(testLibs.mockito.core)
 }
 
 kotlin {
@@ -56,6 +57,7 @@ tasks {
         // A reference to the `IntelliJ Community` sources that contains a bundled mockJDK.
         // Prevents highlighting from returning a lot of noise, such as `Cannot resolve symbol 'java'`.
         systemProperty("idea.home.path", providers.environmentVariable("INTELLIJ_COMMUNITY_SOURCES").get())
+        systemProperty("idea.log.debug.categories", "io.github.lobodpav.spock")
     }
 
     // Allows Groovy code and tests to see Kotlin code

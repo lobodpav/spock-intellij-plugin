@@ -45,8 +45,12 @@ class NewSpecificationActionIdeaSpec extends Specification {
         fixtureTestCase.cleanup()
     }
 
-    // TODO Setup the test project in a way where action.isAvailable() returns false for `src/main/groovy`, `src/main/java`, and `/src/main/kotlin`.
-    //      See https://intellij-support.jetbrains.com/hc/en-us/community/posts/16231590860946-Is-it-possible-to-have-multiple-source-roots-in-unit-tests-
+    /**
+     * The test project setup does not allow for testing of action availability in the `src/main/groovy`, `src/main/java`, and `/src/main/kotlin` source roots,
+     * because the test always return true even when real IntelliJ the action is unavailable.
+     * <p>
+     * See the <a href="https://intellij-support.jetbrains.com/hc/en-us/community/posts/16231590860946-Is-it-possible-to-have-multiple-source-roots-in-unit-tests-">Support post</a>.
+     */
     def "The action is available only when Groovy and Spock are on the classpath"() {
         given: "Manually setup fixture and idea to allow multiple tests defining groovy/spock classpath"
         def fixtureTestCase = new SpockCodeInsightFixtureTestCase(groovyOnClasspath, spockOnClasspath).tap { setup() }

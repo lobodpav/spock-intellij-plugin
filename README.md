@@ -99,3 +99,7 @@ instead of UI tests developers should test the business code instead.
 
 For example, rather than testing a custom File creation action by showing a UI dialog and interacting with it,
 the Action itself should be unit tested.
+                                                      
+## IntelliJ documentation
+
+- [Kotlin UI DSL demos](https://github.com/JetBrains/intellij-community/blob/master/platform/platform-impl/src/com/intellij/internal/ui/uiDslShowcase)

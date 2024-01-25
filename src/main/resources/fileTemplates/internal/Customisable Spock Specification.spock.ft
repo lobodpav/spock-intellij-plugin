@@ -1,0 +1,19 @@
+#if (${PACKAGE_NAME} && $PACKAGE_NAME != "" )package ${PACKAGE_NAME}
+#end
+
+import ${FQ_SUPER_CLASS_NAME}
+
+#parse("File Header.java")
+class ${NAME} extends ${SUPER_CLASS_NAME} {
+
+    def "Feature method"() {
+        given:
+        false
+
+        when:
+        false
+
+        then:
+        false
+    }
+}

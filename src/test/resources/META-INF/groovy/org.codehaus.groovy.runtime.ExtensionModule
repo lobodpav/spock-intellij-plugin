@@ -1,4 +1,4 @@
 moduleName=JVM extensions for Spock tests
 moduleVersion=1.0-test
-extensionClasses=io.github.lobodpav.spock.test.ThreadingJvmExtensions
+extensionClasses=io.github.lobodpav.spock.test.extension.StringJvmExtensions,io.github.lobodpav.spock.test.extension.ThreadingJvmExtensions
 staticExtensionClasses=

@@ -4,5 +4,8 @@
                   language="Groovy" order="first" name="SpockSpecification" extensions="spock"/>
 
         <iconProvider implementation="io.github.lobodpav.spock.icon.SpecificationIconProvider"/>
+
+        <testCreator implementationClass="io.github.lobodpav.spock.extension.testCreator.extension.SpockForJavaTestCreatorExtension" language="JAVA" order="first"/>
+        <testCreator implementationClass="io.github.lobodpav.spock.extension.testCreator.extension.SpockForGroovyTestCreatorExtension" language="Groovy" order="first"/>
     </extensions>
 </idea-plugin>
