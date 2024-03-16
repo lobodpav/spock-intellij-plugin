@@ -3,16 +3,17 @@ package io.github.lobodpav.spock.test.idea
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.lang.annotation.HighlightSeverity
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.vfs.findOrCreateDirectory
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture
 import com.intellij.testFramework.replaceService
-import org.jetbrains.plugins.groovy.GroovyFileType
 
 /**
  * Convenience methods allowing for Idea environment manipulation.
@@ -23,30 +24,49 @@ class Idea(
 
     val project: Project = codeInsightTestFixture.project
     val module: Module = codeInsightTestFixture.module
+    val editor: Editor get() = codeInsightTestFixture.editor
 
-    /** Loads any content into the in-memory editor */
-    fun loadGroovyFileContent(content: String): PsiFile =
-        codeInsightTestFixture.configureByText(GroovyFileType.GROOVY_FILE_TYPE, content)
+    private val virtualTempDirectory = VirtualFileManager.getInstance().findFileByUrl("temp:///") ?: error("Failed to find the 'temp:///' directory where the test data are stored")
 
-    /** Creates a file with the specified content and loads it into the in-memory editor */
-    fun loadGroovyFileContent(filePath: String, content: String): PsiFile =
-        codeInsightTestFixture.configureByText(filePath, content)
+    /**
+     * Creates a file with the specified content and loads it into the in-memory editor.
+     *
+     * The [fqClassName] is relative to the `temp:///src/${sourceRoot}` directory.
+     * For example, for `foo.bar.Baz` and [SourceRoot.GROOVY_MAIN], a `temp:///src/main/groovy/foo/bar/Baz.groovy` file will be created.
+     */
+    fun loadFileContent(sourceRoot: SourceRoot, fqClassName: String, content: String): PsiFile =
+        codeInsightTestFixture.addFileToProject(fqClassName.toFilePath(sourceRoot), content).also {
+            invokeWriteAction {
+                codeInsightTestFixture.openFileInEditor(it.virtualFile)
+            }
+        }
 
     /** Wraps the content in a class extending [spock.lang.Specification] and loads it into the in-memory editor */
     fun loadSpecWithBody(specBody: String): PsiFile =
-        loadGroovyFileContent(specBody.wrapInSpec())
+        loadFileContent(SourceRoot.GROOVY_TEST, "foo.bar.Test", specBody.wrapInSpecification())
+
+    /**
+     * Returns a directory in the project's virtual file system or null when not found.
+     * @param relativePath Either an empty string for the `src/` root directory, or a path to a directory inside the `src/`.
+     */
+    fun findDirectory(relativePath: String = ""): PsiDirectory? {
+        val virtualDirectory = virtualTempDirectory.findFileByRelativePath(relativePath) ?: run {
+            virtualTempDirectory.refresh(false, true)
+            virtualTempDirectory.findFileByRelativePath(relativePath) ?: return null
+        }
+
+        return computeReadAction { codeInsightTestFixture.psiManager.findDirectory(virtualDirectory) }
+    }
 
     /**
      * Returns a directory in the project's virtual file system.
-     * @param relativePath Either an empty string for the `src/` source root directory, or a path to a directory inside the `src/`.
+     * @param relativePath Either an empty string for the `src/` root directory, or a path to a directory inside the `src/`.
      */
-    fun findOrCreateDirectory(relativePath: String = ""): PsiDirectory {
-        val dir = codeInsightTestFixture.tempDirFixture.findOrCreateDir(relativePath)
+    fun findOrCreateDirectory(relativePath: String = ""): PsiDirectory = computeWriteAction {
+        val virtualDirectory = virtualTempDirectory.findOrCreateDirectory(relativePath)
 
-        return runReadAction {
-            codeInsightTestFixture.psiManager.findDirectory(dir)
-                ?: throw IllegalStateException("Did not find a PSI directory for '$relativePath'")
-        }
+        codeInsightTestFixture.psiManager.findDirectory(virtualDirectory)
+            ?: throw IllegalStateException("Did not find a PSI directory for '${virtualDirectory.url}'")
     }
 
     /** Allows tests to switch to Dumb mode by providing a mock service */
@@ -80,12 +100,9 @@ class Idea(
             runnable()
         }
     }
-
-    private fun <T> runReadAction(supplier: () -> T): T =
-        ApplicationManager.getApplication().runReadAction<T> { supplier() }
 }
 
-private fun String.wrapInSpec(): String = """
+private fun String.wrapInSpecification(): String = """
     package test
 
     import spock.lang.Specification
@@ -94,3 +111,12 @@ private fun String.wrapInSpec(): String = """
         $this
     }
 """.trimIndent()
+
+/**
+ * Converts a fully qualified class name to path in the specified [SourceRoot].
+ *
+ * For example, for a `foo.bar.Baz` FQ class name and a [SourceRoot.KOTLIN_MAIN], the returned path is `src/main/kotlin/foo/bar/Baz.kt`.
+ */
+private fun String.toFilePath(sourceRoot: SourceRoot): String =
+    "${sourceRoot.path}/${replace('.', '/')}.${sourceRoot.sourceFileType.extension}"
+

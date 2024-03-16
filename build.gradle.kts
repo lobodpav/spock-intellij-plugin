@@ -35,7 +35,7 @@ intellij {
     type = "IC" // IntelliJ Community
 
     // Dependencies of this plugin
-    plugins = listOf("com.intellij.java", "org.intellij.groovy")
+    plugins = listOf("com.intellij.java", "org.intellij.groovy", "org.jetbrains.kotlin")
 }
 
 tasks {

@@ -1,8 +1,9 @@
 package io.github.lobodpav.spock.test
 
-import com.intellij.openapi.application.ReadAction
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.FirstParam
+
+import static io.github.lobodpav.spock.test.idea.ThreadingKt.computeReadAction
 
 class PsiElementJvmExtensions {
 
@@ -10,14 +11,14 @@ class PsiElementJvmExtensions {
      * PSI read access is only allowed from inside a read-action.
      * <p>
      * Therefore, this extension wraps the closure in the
-     * {@link ReadAction#compute(com.intellij.openapi.util.ThrowableComputable)}
+     * {@link com.intellij.openapi.application.ReadAction#compute(com.intellij.openapi.util.ThrowableComputable)}
      * and returns the result.
      * <p>
      * The closure receives the object as <code>this</code> for convenience.
      * <p>
      * <b>Example:</b>
      * <pre>
-     * PsiDirectory sourceDirectory = idea.findOrCreateDirectory("test/groovy/dir1/dir2/myDirectory")
+     * PsiDirectory sourceDirectory = idea.findOrCreateDirectory("src/test/groovy/dir1/dir2/myDirectory")
      * assert sourceDirectory.read { name } == "myDirectory"
      * </pre>
      */
@@ -31,6 +32,6 @@ class PsiElementJvmExtensions {
         def closureClone = closure.rehydrate(self, this, this)
         closureClone.resolveStrategy = Closure.DELEGATE_FIRST
 
-        ReadAction.compute { closureClone.call(self) }
+        computeReadAction { closureClone.call(self) }
     }
 }

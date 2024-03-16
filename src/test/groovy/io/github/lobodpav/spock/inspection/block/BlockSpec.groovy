@@ -1,6 +1,5 @@
 package io.github.lobodpav.spock.inspection.block
 
-import io.github.lobodpav.spock.inspection.block.Block
 import spock.lang.Specification
 
 class BlockSpec extends Specification {

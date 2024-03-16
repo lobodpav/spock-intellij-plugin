@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <testCreator implementationClass="io.github.lobodpav.spock.extension.testCreator.extension.SpockForKotlinTestCreatorExtension" language="kotlin" order="first"/>
+    </extensions>
+</idea-plugin>

@@ -9,7 +9,7 @@ class DataContextProvider {
 
     static Map defaults() {
         [
-            sourceDirectory: "test/groovy",
+            sourceDirectory: "src/test/groovy",
         ]
     }
 

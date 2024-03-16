@@ -1,6 +1,7 @@
 package io.github.lobodpav.spock.inspection.block
 
 import io.github.lobodpav.spock.test.idea.Idea
+import io.github.lobodpav.spock.test.idea.SourceRoot
 import io.github.lobodpav.spock.test.idea.WithIdea
 import spock.lang.Specification
 
@@ -116,14 +117,14 @@ class BlockInspectionVisitorIdeaSpec extends Specification {
 
     def "Regular Groovy code does not get Spock errors highlighted"() {
         given:
-        idea.loadGroovyFileContent """
+        idea.loadFileContent(SourceRoot.GROOVY_TEST, "foo.bar.Test", """
             class Test {
                 def test() {
                     when:
                     true
                 }
             }
-        """
+        """)
 
         when:
         def blockHighlightingInfo = idea.runHighlighting()

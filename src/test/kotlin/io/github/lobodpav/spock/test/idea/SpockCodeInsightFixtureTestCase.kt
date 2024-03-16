@@ -17,14 +17,11 @@ class SpockCodeInsightFixtureTestCase(
     private val spockOnClasspath: Boolean = true,
 ) : LightJavaCodeInsightFixtureTestCase() {
 
-    override fun getProjectDescriptor(): LightProjectDescriptor {
-        val projectDescriptor = SpockLightProjectDescriptor { fixture }
+    override fun getProjectDescriptor(): LightProjectDescriptor = SpockLightProjectDescriptor().apply {
 
         // Adds Spock dependency to avoid ERROR inspections about missing spock libraries (e.g. `Specification`)
-        if (groovyOnClasspath) projectDescriptor.withRepositoryLibrary("org.apache.groovy:groovy:4.0.13", false)
-        if (spockOnClasspath) projectDescriptor.withRepositoryLibrary("org.spockframework:spock-core:2.3-groovy-4.0", false)
-
-        return projectDescriptor
+        if (groovyOnClasspath) withRepositoryLibrary("org.apache.groovy:groovy:4.0.13", false)
+        if (spockOnClasspath) withRepositoryLibrary("org.spockframework:spock-core:2.3-groovy-4.0", false)
     }
 
     val fixture: JavaCodeInsightTestFixture
