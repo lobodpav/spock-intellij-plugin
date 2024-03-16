@@ -90,7 +90,7 @@ class Idea(
      *
      * Therefore, this extension wraps the closure inside a [WriteCommandAction.runWriteCommandAction] and waits for the result.
      *
-     * @see io.github.lobodpav.spock.test.PsiElementJvmExtensions.read
+     * @see io.github.lobodpav.spock.test.ThreadingJvmExtensions.read
      */
     fun write(runnable: () -> Unit) {
         // java.lang.RuntimeException: com.intellij.util.IncorrectOperationException:

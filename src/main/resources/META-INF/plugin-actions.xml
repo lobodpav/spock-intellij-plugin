@@ -1,7 +1,7 @@
 <idea-plugin>
     <actions>
-        <action id="io.github.lobodpav.spock.action.NewSpockSpecificationAction"
-                class="io.github.lobodpav.spock.action.NewSpockSpecificationAction"
+        <action id="io.github.lobodpav.spock.action.NewSpecificationAction"
+                class="io.github.lobodpav.spock.action.NewSpecificationAction"
                 text="Spock Specification" description="Creates a new Spock Specification">
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="Groovy.NewClass"/>
         </action>

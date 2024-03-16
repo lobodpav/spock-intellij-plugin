@@ -9,12 +9,15 @@ class SpecificationNameValidator(project: Project) : InputValidatorEx {
 
     private val psiNameHelper = project.service<PsiNameHelper>()
 
-    override fun getErrorText(inputString: String): String? =
-        when {
-            inputString.isBlank()                       -> "Blank Specification name"
-            !psiNameHelper.isQualifiedName(inputString) -> "Not a valid Groovy qualified name"
-            else                                        -> null
-        }
+    /**
+     * Gets an error text if the argument is not a valid Groovy class name.
+     * Returns `null` if there was no validation error.
+     */
+    override fun getErrorText(className: String): String? = when {
+        className.isBlank()                       -> "Blank Specification name"
+        !psiNameHelper.isQualifiedName(className) -> "Not a valid Groovy qualified name"
+        else                                      -> null
+    }
 
     override fun canClose(inputString: String): Boolean = getErrorText(inputString) == null
 }

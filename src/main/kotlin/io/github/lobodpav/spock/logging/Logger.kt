@@ -1,5 +1,6 @@
 package io.github.lobodpav.spock.logging
 
+import kotlin.reflect.KClass
 import com.intellij.openapi.diagnostic.Logger as IntelliJLogger
 
 /**
@@ -11,6 +12,11 @@ import com.intellij.openapi.diagnostic.Logger as IntelliJLogger
  * */
 abstract class Logger {
     protected val log: IntelliJLogger = IntelliJLogger.getInstance(this.javaClass.enclosingClass ?: this.javaClass)
+
+    companion object {
+        fun getInstance(name: String): IntelliJLogger = IntelliJLogger.getInstance(name)
+        fun getInstance(kClass: KClass<*>): IntelliJLogger = IntelliJLogger.getInstance(kClass.java)
+    }
 }
 
 private class LoggerSample {

@@ -1,4 +1,4 @@
-package io.github.lobodpav.spock.type
+package io.github.lobodpav.spock.extension.fileType
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import io.github.lobodpav.spock.icon.SpockIcon

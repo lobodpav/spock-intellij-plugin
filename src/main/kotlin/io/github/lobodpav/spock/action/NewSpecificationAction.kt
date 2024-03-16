@@ -5,9 +5,7 @@ import com.intellij.ide.actions.JavaCreateTemplateInPackageAction
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.components.service
-import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.DumbAware
-import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
@@ -19,12 +17,10 @@ import org.jetbrains.jps.model.java.JavaSourceRootType
 import org.jetbrains.plugins.groovy.GroovyBundle
 import org.jetbrains.plugins.groovy.actions.GroovyTemplatesFactory
 import org.jetbrains.plugins.groovy.actions.NewGroovyActionBase
-import org.jetbrains.plugins.groovy.ext.spock.SpockUtils
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.GrTypeDefinition
-import org.jetbrains.plugins.groovy.util.LibrariesUtil
 
-class NewSpockSpecificationAction : JavaCreateTemplateInPackageAction<GrTypeDefinition>(
+class NewSpecificationAction : JavaCreateTemplateInPackageAction<GrTypeDefinition>(
     { ACTION_NAME },
     { "Creates a new $ACTION_NAME" },
     { SpockIcon.specification },
@@ -46,7 +42,7 @@ class NewSpockSpecificationAction : JavaCreateTemplateInPackageAction<GrTypeDefi
         val module = dataContext.getData(LangDataKeys.MODULE) ?: return false
 
         // Skip Spock classpath check when in Dumb mode to allow users to code Specifications during indexing
-        return super.isAvailable(dataContext) && module.groovyOnClasspath && (module.ideInDumbMode || module.spockOnClasspath)
+        return super.isAvailable(dataContext) && module.spockAvailable
     }
 
     override fun getActionName(directory: PsiDirectory, newName: String, templateName: String): String = ACTION_NAME
@@ -58,7 +54,7 @@ class NewSpockSpecificationAction : JavaCreateTemplateInPackageAction<GrTypeDefi
     override fun getNavigationElement(createdElement: GrTypeDefinition): PsiElement? =
         createdElement.body?.methods?.get(0) ?: createdElement.lBrace
 
-    override fun doCreate(psiDirectory: PsiDirectory, className: String, templateName: String): GrTypeDefinition? {
+    public override fun doCreate(psiDirectory: PsiDirectory, className: String, templateName: String): GrTypeDefinition {
         val fileName = "$className${NewGroovyActionBase.GROOVY_EXTENSION}"
 
         val psiFileFromTemplate = GroovyTemplatesFactory.createFromTemplate(
@@ -76,12 +72,4 @@ class NewSpockSpecificationAction : JavaCreateTemplateInPackageAction<GrTypeDefi
             ),
         )
     }
-
-    /** Finds out if IntelliJ is in dumb mode (i.e. indexing) */
-    private val Module.ideInDumbMode: Boolean get() = project.service<DumbService>().isDumb
-
-    private val Module.groovyOnClasspath: Boolean get() = LibrariesUtil.hasGroovySdk(this)
-
-    private val Module.spockOnClasspath: Boolean get() =
-        LibrariesUtil.findJarWithClass(this, SpockUtils.SPEC_CLASS_NAME) != null
 }

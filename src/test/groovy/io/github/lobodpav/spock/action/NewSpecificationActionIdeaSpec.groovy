@@ -8,9 +8,9 @@ import io.github.lobodpav.spock.test.idea.SpockCodeInsightFixtureTestCase
 import io.github.lobodpav.spock.test.provider.DataContextProvider
 import spock.lang.Specification
 
-class NewSpockSpecificationActionIdeaSpec extends Specification {
+class NewSpecificationActionIdeaSpec extends Specification {
 
-    def newSpockSpecificationAction = new NewSpockSpecificationAction()
+    def newSpecificationAction = new NewSpecificationAction()
 
     def "The action produces a groovy file with a Specification class"() {
         given: "Manually setup fixture and idea to allow multiple tests defining groovy/spock classpath"
@@ -22,7 +22,7 @@ class NewSpockSpecificationActionIdeaSpec extends Specification {
 
         when: "The action creates a new specification"
         idea.write {
-            newSpockSpecificationAction.doCreate(sourceDirectory, "SpecInSpec", SpockTemplate.SPECIFICATION)
+            newSpecificationAction.doCreate(sourceDirectory, "SpecInSpec", SpockTemplate.SPECIFICATION)
         }
 
         and: "The created file is retrieved"
@@ -59,7 +59,7 @@ class NewSpockSpecificationActionIdeaSpec extends Specification {
         def dataContext = DataContextProvider.make(idea, [sourceDirectory: sourceDirectory])
 
         when:
-        def actionIsAvailable = newSpockSpecificationAction.read { isAvailable(dataContext) }
+        def actionIsAvailable = newSpecificationAction.read { isAvailable(dataContext) }
 
         then:
         actionIsAvailable == expectedActionAvailability
