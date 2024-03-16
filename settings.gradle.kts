@@ -3,14 +3,14 @@ rootProject.name = "spock-intellij-plugin"
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("kotlin", "1.9.21")
+            version("kotlin", "1.9.23")
 
             library("kotlin-stdlib", "org.jetbrains.kotlin", "kotlin-stdlib").versionRef("kotlin")
         }
 
         create("testLibs") {
-            version("groovy", "4.0.13")
-            version("spock", "2.3-groovy-4.0")
+            version("groovy", "4.0.20")
+            version("spock", "2.4-M2-groovy-4.0")
 
             library("groovy", "org.apache.groovy", "groovy").versionRef("groovy")
             // Allows mocking classes without a non-parametric constructor

@@ -6,7 +6,7 @@ plugins {
     kotlin("jvm") version "1.9.21"
     groovy
 
-    id("org.jetbrains.intellij") version "1.17.0"
+    id("org.jetbrains.intellij") version "1.17.2"
     id("org.jetbrains.changelog") version "2.2.0"
 }
 
@@ -29,7 +29,7 @@ kotlin {
 
 intellij {
     // The version of the IntelliJ Platform IDE that will be used to build the plugin
-    version = "2023.3.2"
+    version = "2023.3.5"
 
     // The type of the IntelliJ-based IDE distribution
     type = "IC" // IntelliJ Community
