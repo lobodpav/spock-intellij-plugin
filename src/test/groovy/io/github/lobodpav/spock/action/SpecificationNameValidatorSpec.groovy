@@ -1,19 +1,13 @@
 package io.github.lobodpav.spock.action
 
-
-import io.github.lobodpav.spock.test.idea.Idea
-import io.github.lobodpav.spock.test.idea.WithIdea
 import spock.lang.Specification
 
-class SpecificationNameValidatorIdeaSpec extends Specification {
-
-    @WithIdea
-    Idea idea
+class SpecificationNameValidatorSpec extends Specification {
 
     SpecificationNameValidator specificationNameValidator
 
     def setup() {
-        specificationNameValidator = new SpecificationNameValidator(idea.project)
+        specificationNameValidator = new SpecificationNameValidator()
     }
 
     def "Gets an error text"() {

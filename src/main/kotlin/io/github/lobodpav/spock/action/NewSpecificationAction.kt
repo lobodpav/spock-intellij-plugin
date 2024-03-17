@@ -35,7 +35,7 @@ class NewSpecificationAction : JavaCreateTemplateInPackageAction<GrTypeDefinitio
         builder
             .setTitle("New $ACTION_NAME")
             .addKind("Class", SpockIcon.specification, SpockTemplate.SPECIFICATION)
-            .setValidator(SpecificationNameValidator(project))
+            .setValidator(SpecificationNameValidator())
     }
 
     override fun isAvailable(dataContext: DataContext): Boolean {

@@ -1,13 +1,11 @@
 package io.github.lobodpav.spock.action
 
-import com.intellij.openapi.components.service
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.InputValidatorEx
-import com.intellij.psi.PsiNameHelper
+import com.intellij.psi.impl.PsiNameHelperImpl
 
-class SpecificationNameValidator(project: Project) : InputValidatorEx {
+class SpecificationNameValidator : InputValidatorEx {
 
-    private val psiNameHelper = project.service<PsiNameHelper>()
+    private val psiNameHelper = PsiNameHelperImpl.getInstance()
 
     /**
      * Gets an error text if the argument is not a valid Groovy class name.
