@@ -13,6 +13,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.util.IncorrectOperationException
 import io.github.lobodpav.spock.icon.SpockIcon
 import io.github.lobodpav.spock.logging.Logger
+import io.github.lobodpav.spock.validator.FullyQualifiedNameValidator
 import org.jetbrains.jps.model.java.JavaSourceRootType
 import org.jetbrains.plugins.groovy.GroovyBundle
 import org.jetbrains.plugins.groovy.actions.GroovyTemplatesFactory
@@ -35,7 +36,7 @@ class NewSpecificationAction : JavaCreateTemplateInPackageAction<GrTypeDefinitio
         builder
             .setTitle("New $ACTION_NAME")
             .addKind("Class", SpockIcon.specification, SpockTemplate.SPECIFICATION)
-            .setValidator(SpecificationNameValidator())
+            .setValidator(FullyQualifiedNameValidator())
     }
 
     override fun isAvailable(dataContext: DataContext): Boolean {
