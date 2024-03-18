@@ -2,10 +2,10 @@ package io.github.lobodpav.spock.action
 
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiClassType
-import com.intellij.psi.PsiJavaFile
 import io.github.lobodpav.spock.test.idea.Idea
 import io.github.lobodpav.spock.test.idea.SpockCodeInsightFixtureTestCase
 import io.github.lobodpav.spock.test.provider.DataContextProvider
+import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 import spock.lang.Specification
 
 class NewSpecificationActionIdeaSpec extends Specification {
@@ -21,21 +21,21 @@ class NewSpecificationActionIdeaSpec extends Specification {
         def sourceDirectory = idea.findOrCreateDirectory("src/test/groovy/my/cool/name")
 
         when: "The action creates a new specification"
-        idea.write {
-            newSpecificationAction.doCreate(sourceDirectory, "SpecInSpec", SpockTemplate.SPECIFICATION)
+        idea.writeCommandAction {
+            newSpecificationAction.doCreate(sourceDirectory, "SpecInSpec", SpecificationTemplate.SIMPLE.fileName)
         }
 
         and: "The created file is retrieved"
-        def psiJavaFile = sourceDirectory.read { findFile("SpecInSpec.groovy") as PsiJavaFile }
+        def groovyFile = sourceDirectory.read { findFile("SpecInSpec.groovy") as GroovyFile }
 
         then: "A groovy file exists"
-        psiJavaFile
+        groovyFile
 
         and: "The package name is correct"
-        psiJavaFile.read { packageName } == "my.cool.name"
+        groovyFile.read { packageName } == "my.cool.name"
 
         when: "Extended classes are looked up"
-        def extendedClasses = psiJavaFile.read { classes*.extendsList*.referencedTypes.flatten() } as List<PsiClassType>
+        def extendedClasses = groovyFile.read { classes*.extendsList*.referencedTypes.flatten() } as List<PsiClassType>
 
         then: "There is a single extended Specification class"
         extendedClasses*.read { canonicalText } == ["spock.lang.Specification"]

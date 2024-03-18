@@ -1,6 +1,6 @@
 package io.github.lobodpav.spock.logging
 
-import kotlin.reflect.KClass
+import java.lang.invoke.MethodHandles
 import com.intellij.openapi.diagnostic.Logger as IntelliJLogger
 
 /**
@@ -14,8 +14,14 @@ abstract class Logger {
     protected val log: IntelliJLogger = IntelliJLogger.getInstance(this.javaClass.enclosingClass ?: this.javaClass)
 
     companion object {
-        fun getInstance(name: String): IntelliJLogger = IntelliJLogger.getInstance(name)
-        fun getInstance(kClass: KClass<*>): IntelliJLogger = IntelliJLogger.getInstance(kClass.java)
+
+        /**
+         * Obtains logger for a Kotlin file without a class. Uses the fully qualified file name.
+         *
+         * For example, if retrieved in a `src/main/kotlin/foo/bar/Baz.kt` file, the returned logger will use the `foo.bar.BazKt` name.
+         */
+        @Suppress("NOTHING_TO_INLINE")
+        inline fun getInstance(): IntelliJLogger = IntelliJLogger.getInstance(MethodHandles.lookup().lookupClass())
     }
 }
 

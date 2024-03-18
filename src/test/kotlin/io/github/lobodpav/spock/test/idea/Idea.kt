@@ -6,14 +6,18 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.vfs.findOrCreateDirectory
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture
 import com.intellij.testFramework.replaceService
+import io.github.lobodpav.spock.test.idea.SpockLightProjectDescriptor.Companion.TEMP_DIRECTORY
 
 /**
  * Convenience methods allowing for Idea environment manipulation.
@@ -22,16 +26,32 @@ class Idea(
     private val codeInsightTestFixture: CodeInsightTestFixture,
 ) {
 
+    private val virtualTempDirectory = VirtualFileManager.getInstance().findFileByUrl(TEMP_DIRECTORY) ?: error("Failed to find the '$TEMP_DIRECTORY' directory where the test data are stored")
+
     val project: Project = codeInsightTestFixture.project
     val module: Module = codeInsightTestFixture.module
+
+    /** Gets an editor if a file was loaded and opened in the Editor, for example by calling the [loadFileContent] */
     val editor: Editor get() = codeInsightTestFixture.editor
 
-    private val virtualTempDirectory = VirtualFileManager.getInstance().findFileByUrl("temp:///") ?: error("Failed to find the 'temp:///' directory where the test data are stored")
+    /** Opens a file in the [editor]. Necessary if a file was created by the plugin code. */
+    fun openFileInEditor(virtualFile: VirtualFile): Editor {
+        codeInsightTestFixture.openFileInEditor(virtualFile)
+        return editor
+    }
+
+    fun getTestSourceRoot(testModule: TestModule): VirtualFile {
+        val module = ModuleManager.getInstance(project).modules.find { it.name == testModule.moduleName }
+            ?: error("Did not find the '${testModule.moduleName}' module")
+
+        return ModuleRootManager.getInstance(module).sourceRoots.find { it.path.endsWith(SourceRoot.GROOVY_TEST.path) }
+            ?: error("Did not find the Groovy test source root")
+    }
 
     /**
      * Creates a file with the specified content and loads it into the in-memory editor.
      *
-     * The [fqClassName] is relative to the `temp:///src/${sourceRoot}` directory.
+     * The [fqClassName] is relative to the `temp:///${sourceRoot}` directory.
      * For example, for `foo.bar.Baz` and [SourceRoot.GROOVY_MAIN], a `temp:///src/main/groovy/foo/bar/Baz.groovy` file will be created.
      */
     fun loadFileContent(sourceRoot: SourceRoot, fqClassName: String, content: String): PsiFile =
@@ -46,23 +66,29 @@ class Idea(
         loadFileContent(SourceRoot.GROOVY_TEST, "foo.bar.Test", specBody.wrapInSpecification())
 
     /**
-     * Returns a directory in the project's virtual file system or null when not found.
-     * @param relativePath Either an empty string for the `src/` root directory, or a path to a directory inside the `src/`.
+     * Returns a file in the project's virtual file system or null when not found.
+     *
+     * The virtual [TEMP_DIRECTORY] is reloaded if the file is not found at the first attempt.
      */
-    fun findDirectory(relativePath: String = ""): PsiDirectory? {
-        val virtualDirectory = virtualTempDirectory.findFileByRelativePath(relativePath) ?: run {
+    fun findVirtualFile(relativePath: String): VirtualFile? =
+        virtualTempDirectory.findFileByRelativePath(relativePath) ?: run {
             virtualTempDirectory.refresh(false, true)
             virtualTempDirectory.findFileByRelativePath(relativePath) ?: return null
         }
 
+
+    /**
+     * Returns a directory in the project's virtual file system or null when not found.
+     */
+    fun findDirectory(relativePath: String): PsiDirectory? {
+        val virtualDirectory = findVirtualFile(relativePath) ?: return null
         return computeReadAction { codeInsightTestFixture.psiManager.findDirectory(virtualDirectory) }
     }
 
     /**
      * Returns a directory in the project's virtual file system.
-     * @param relativePath Either an empty string for the `src/` root directory, or a path to a directory inside the `src/`.
      */
-    fun findOrCreateDirectory(relativePath: String = ""): PsiDirectory = computeWriteAction {
+    fun findOrCreateDirectory(relativePath: String): PsiDirectory = computeWriteAction {
         val virtualDirectory = virtualTempDirectory.findOrCreateDirectory(relativePath)
 
         codeInsightTestFixture.psiManager.findDirectory(virtualDirectory)
@@ -92,7 +118,7 @@ class Idea(
      *
      * @see io.github.lobodpav.spock.test.ThreadingJvmExtensions.read
      */
-    fun write(runnable: () -> Unit) {
+    fun writeCommandAction(runnable: () -> Unit) {
         // java.lang.RuntimeException: com.intellij.util.IncorrectOperationException:
         // Must not change PSI outside command or undo-transparent action.
         // See com.intellij.openapi.command.WriteCommandAction or com.intellij.openapi.command.CommandProcessor
