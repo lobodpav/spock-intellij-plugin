@@ -6,7 +6,7 @@ enum class TestModule(val moduleName: String, val sourceRootPrefix: String) {
      *
      * Maven multi-module projects do not have a root module.
      */
-    TEST("test", ""),
+    ROOT("test", ""),
     MODULE1("module1", "module1"),
     MODULE2("module2", "module2"),
 }

@@ -1,4 +1,4 @@
-package io.github.lobodpav.spock.action
+package io.github.lobodpav.spock.template
 
 /**
  * For actions that use file templates, both the action and template would appear in the `File -> New` menu.

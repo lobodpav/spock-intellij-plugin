@@ -1,4 +1,4 @@
-package io.github.lobodpav.spock.action
+package io.github.lobodpav.spock.extension.testCreator
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module

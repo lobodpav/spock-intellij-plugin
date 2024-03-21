@@ -1,5 +1,6 @@
 package io.github.lobodpav.spock.test.idea
 
+import io.github.lobodpav.spock.logging.Logger
 import org.spockframework.runtime.extension.IMethodInterceptor
 import org.spockframework.runtime.extension.IMethodInvocation
 import org.spockframework.runtime.model.FieldInfo
@@ -14,8 +15,10 @@ class IdeaInterceptor(
     private val fieldInfo: FieldInfo,
 ) : IMethodInterceptor {
 
+    private companion object : Logger()
 
     override fun intercept(invocation: IMethodInvocation) {
+        log.info("Setting up '${SpockCodeInsightFixtureTestCase::class.simpleName}'")
         val spockCodeInsightFixtureTestCase = SpockCodeInsightFixtureTestCase().apply {
             setup()
         }
@@ -26,7 +29,7 @@ class IdeaInterceptor(
         try {
             invocation.proceed()
         } finally {
-            // Clean up
+            log.info("Cleaning up '${SpockCodeInsightFixtureTestCase::class.simpleName}'")
             spockCodeInsightFixtureTestCase.cleanup()
             fieldInfo.writeValue(invocation.instance, null)
         }

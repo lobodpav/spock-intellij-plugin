@@ -4,7 +4,6 @@ import com.intellij.openapi.components.service
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.util.IncorrectOperationException
-import io.github.lobodpav.spock.action.SpecificationTemplate
 import org.jetbrains.plugins.groovy.GroovyBundle
 import org.jetbrains.plugins.groovy.actions.GroovyTemplatesFactory
 import org.jetbrains.plugins.groovy.actions.NewGroovyActionBase

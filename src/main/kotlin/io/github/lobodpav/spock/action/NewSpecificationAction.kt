@@ -8,9 +8,11 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
+import io.github.lobodpav.spock.extension.testCreator.spockAvailable
 import io.github.lobodpav.spock.icon.SpockIcon
 import io.github.lobodpav.spock.logging.Logger
 import io.github.lobodpav.spock.template.SpecificationCreator
+import io.github.lobodpav.spock.template.SpecificationTemplate
 import io.github.lobodpav.spock.validator.FullyQualifiedNameValidator
 import org.jetbrains.jps.model.java.JavaSourceRootType
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.GrTypeDefinition

@@ -2,6 +2,7 @@ package io.github.lobodpav.spock.action
 
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiClassType
+import io.github.lobodpav.spock.template.SpecificationTemplate
 import io.github.lobodpav.spock.test.idea.Idea
 import io.github.lobodpav.spock.test.idea.SpockCodeInsightFixtureTestCase
 import io.github.lobodpav.spock.test.provider.DataContextProvider

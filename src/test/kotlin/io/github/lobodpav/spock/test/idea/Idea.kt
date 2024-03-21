@@ -10,13 +10,16 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.vfs.findOrCreateDirectory
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture
 import com.intellij.testFramework.replaceService
+import com.intellij.testFramework.utils.vfs.createFile
 import io.github.lobodpav.spock.test.idea.SpockLightProjectDescriptor.Companion.TEMP_DIRECTORY
 
 /**
@@ -29,7 +32,6 @@ class Idea(
     private val virtualTempDirectory = VirtualFileManager.getInstance().findFileByUrl(TEMP_DIRECTORY) ?: error("Failed to find the '$TEMP_DIRECTORY' directory where the test data are stored")
 
     val project: Project = codeInsightTestFixture.project
-    val module: Module = codeInsightTestFixture.module
 
     /** Gets an editor if a file was loaded and opened in the Editor, for example by calling the [loadFileContent] */
     val editor: Editor get() = codeInsightTestFixture.editor
@@ -40,9 +42,11 @@ class Idea(
         return editor
     }
 
+    fun getModule(testModule: TestModule): Module? =
+        ModuleManager.getInstance(project).modules.find { it.name == testModule.moduleName }
+
     fun getTestSourceRoot(testModule: TestModule): VirtualFile {
-        val module = ModuleManager.getInstance(project).modules.find { it.name == testModule.moduleName }
-            ?: error("Did not find the '${testModule.moduleName}' module")
+        val module = getModule(testModule) ?: error("Did not find the '${testModule.moduleName}' module")
 
         return ModuleRootManager.getInstance(module).sourceRoots.find { it.path.endsWith(SourceRoot.GROOVY_TEST.path) }
             ?: error("Did not find the Groovy test source root")
@@ -54,16 +58,21 @@ class Idea(
      * The [fqClassName] is relative to the `temp:///${sourceRoot}` directory.
      * For example, for `foo.bar.Baz` and [SourceRoot.GROOVY_MAIN], a `temp:///src/main/groovy/foo/bar/Baz.groovy` file will be created.
      */
-    fun loadFileContent(sourceRoot: SourceRoot, fqClassName: String, content: String): PsiFile =
-        codeInsightTestFixture.addFileToProject(fqClassName.toFilePath(sourceRoot), content).also {
-            invokeWriteAction {
-                codeInsightTestFixture.openFileInEditor(it.virtualFile)
-            }
+    fun loadFileContent(fqClassName: String, content: String, testModule: TestModule = TestModule.ROOT, sourceRoot: SourceRoot = SourceRoot.GROOVY_TEST): PsiFile {
+        val filePath = fqClassName.toFilePath(testModule, sourceRoot)
+
+        return computeWriteAction {
+            val createdFile = virtualTempDirectory.createFile(filePath)
+            VfsUtil.saveText(createdFile, content)
+
+            codeInsightTestFixture.openFileInEditor(createdFile)
+            PsiManager.getInstance(project).findFile(createdFile) ?: error("Did not find the '${createdFile.url}'")
         }
+    }
 
     /** Wraps the content in a class extending [spock.lang.Specification] and loads it into the in-memory editor */
     fun loadSpecWithBody(specBody: String): PsiFile =
-        loadFileContent(SourceRoot.GROOVY_TEST, "foo.bar.Test", specBody.wrapInSpecification())
+        loadFileContent("foo.bar.Test", specBody.wrapInSpecification(), TestModule.ROOT, SourceRoot.GROOVY_TEST)
 
     /**
      * Returns a file in the project's virtual file system or null when not found.
@@ -75,7 +84,6 @@ class Idea(
             virtualTempDirectory.refresh(false, true)
             virtualTempDirectory.findFileByRelativePath(relativePath) ?: return null
         }
-
 
     /**
      * Returns a directory in the project's virtual file system or null when not found.
@@ -116,7 +124,7 @@ class Idea(
      *
      * Therefore, this extension wraps the closure inside a [WriteCommandAction.runWriteCommandAction] and waits for the result.
      *
-     * @see io.github.lobodpav.spock.test.ThreadingJvmExtensions.read
+     * @see io.github.lobodpav.spock.test.extension.ThreadingJvmExtensions.read
      */
     fun writeCommandAction(runnable: () -> Unit) {
         // java.lang.RuntimeException: com.intellij.util.IncorrectOperationException:
@@ -143,6 +151,5 @@ private fun String.wrapInSpecification(): String = """
  *
  * For example, for a `foo.bar.Baz` FQ class name and a [SourceRoot.KOTLIN_MAIN], the returned path is `src/main/kotlin/foo/bar/Baz.kt`.
  */
-private fun String.toFilePath(sourceRoot: SourceRoot): String =
-    "${sourceRoot.path}/${replace('.', '/')}.${sourceRoot.sourceFileType.extension}"
-
+private fun String.toFilePath(testModule: TestModule, sourceRoot: SourceRoot): String =
+    "${testModule.sourceRootPrefix}/${sourceRoot.path}/${replace('.', '/')}.${sourceRoot.sourceFileType.extension}"

@@ -1,6 +1,5 @@
 package io.github.lobodpav.spock.template
 
-import io.github.lobodpav.spock.action.SpecificationTemplate
 import io.github.lobodpav.spock.test.idea.Idea
 import io.github.lobodpav.spock.test.idea.WithIdea
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile

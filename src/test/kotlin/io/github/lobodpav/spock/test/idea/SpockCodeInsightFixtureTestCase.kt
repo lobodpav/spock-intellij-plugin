@@ -1,5 +1,6 @@
 package io.github.lobodpav.spock.test.idea
 
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.testFramework.LightProjectDescriptor
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
@@ -33,5 +34,10 @@ class SpockCodeInsightFixtureTestCase(
 
     fun cleanup() {
         super.tearDown()
+
+        invokeWriteAction {
+            VirtualFileManager.getInstance().findFileByUrl(SpockLightProjectDescriptor.TEMP_DIRECTORY)
+                ?.children?.forEach { it.delete(this) }
+        }
     }
 }
