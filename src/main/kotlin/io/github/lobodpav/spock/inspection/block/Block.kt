@@ -31,8 +31,8 @@ enum class Block : BlockSurrounding {
         override val canBeLastBlock = true
     },
     EXPECT {
-        override val allowedDirectPredecessors by lazy { setOf(GIVEN, SETUP, EXPECT, THEN) }
-        override val allowedDirectSuccessors by lazy { setOf(EXPECT, WHEN, CLEANUP, WHERE, AND) }
+        override val allowedDirectPredecessors by lazy { setOf(GIVEN, SETUP, THEN) }
+        override val allowedDirectSuccessors by lazy { setOf(WHEN, CLEANUP, WHERE, AND) }
 
         override val canBeFirstBlock = true
         override val canBeLastBlock = true

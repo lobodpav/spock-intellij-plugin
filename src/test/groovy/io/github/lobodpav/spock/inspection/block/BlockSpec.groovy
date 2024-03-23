@@ -35,6 +35,7 @@ class BlockSpec extends Specification {
         Block.@WHEN    | Block.@THEN    || false
         Block.@WHEN    | Block.@WHERE   || true
         Block.@WHEN    | Block.@WHEN    || true
+        Block.@EXPECT  | Block.@EXPECT  || true
         Block.@CLEANUP | Block.@WHERE   || false
         Block.@WHERE   | Block.@CLEANUP || true
     }

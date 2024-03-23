@@ -42,6 +42,7 @@ class BlockInspectionVisitorIdeaSpec extends Specification {
             ["expect"],
             ["when", "then"],
             ["expect", "and"],
+            ["expect", "and", "when", "then", "expect"],
             ["cleanup", "and", "and"],
             ["where", "and", "and"],
         ]
@@ -79,7 +80,8 @@ class BlockInspectionVisitorIdeaSpec extends Specification {
         ["given"]                       | "baz"          | ["where"]        || "Valid block names are 'given', 'setup', 'expect', 'when', 'then', 'cleanup', 'where', 'and'"
 
         // Unexpected block after the previous one
-        ["expect", "and", "expect"]     | "then"         | []               || "Expected one of 'expect', 'when', 'cleanup', 'where', 'and', or an end of the feature method"
+        ["expect"]                      | "then"         | []               || "Expected one of 'when', 'cleanup', 'where', 'and', or an end of the feature method"
+        ["expect", "and"]               | "then"         | []               || "Expected one of 'when', 'cleanup', 'where', 'and', or an end of the feature method"
         ["where", "and", "and"]         | "when"         | ["and"]          || "Expected 'and', or an end of the feature method"
         ["when", "and", "then", "when"] | "expect"       | ["where", "and"] || "Expected one of 'then', 'and'"
 
@@ -88,8 +90,11 @@ class BlockInspectionVisitorIdeaSpec extends Specification {
 
         // WHEN cannot be the last block in the feature method
         ["given"]                       | "when"         | []               || "Must be followed by one of 'then', 'and'"
-    }
 
+        // EXPECT can't follow another EXPECT
+        ["expect"]                      | "expect"       | []               || "Expected one of 'when', 'cleanup', 'where', 'and', or an end of the feature method"
+        ["expect", "and"]               | "expect"       | []               || "Expected one of 'when', 'cleanup', 'where', 'and', or an end of the feature method"
+    }
 
     def "Inspections skip non-feature methods `when` block when `then` is missing"() {
         given:

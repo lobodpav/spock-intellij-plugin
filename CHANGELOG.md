@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2024-??-??
 
+### Fixed
+
+- Block order inspection did not report an `expect` block followed by another `expect`
+
 ## [1.0.0] - 2024-03-23
 
 ### Added
