@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - Delete columns
       - Split long tables into two
 
+## [1.1.0] - 2024-??-??
+
 ## [1.0.0] - 2024-03-23
 
 ### Added
