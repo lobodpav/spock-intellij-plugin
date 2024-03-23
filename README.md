@@ -44,8 +44,7 @@ gradle signPlugin
 2. Update
    - [CHANGELOG.md](CHANGELOG.md)
    - [plugin.xml](src/main/resources/META-INF/plugin.xml)
-3. Update the [CHANGELOG.md](CHANGELOG.md)
-4. Run `op run -- gradle build runPluginVerifier signPlugin publishPlugin`
+3. Run `op run -- gradle build runPluginVerifier signPlugin publishPlugin`
 
 ## Security
 
