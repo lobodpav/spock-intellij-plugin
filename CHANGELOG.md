@@ -37,11 +37,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - Delete columns
       - Split long tables into two
 
-## [1.1.0] - 2024-??-??
+## [1.0.1] - 2024-??-??
 
 ### Fixed
 
 - Block order inspection did not report an `expect` block followed by another `expect`
+- When debugging Groovy code, the [Expression Evaluator did not work](https://youtrack.jetbrains.com/issue/IDEA-351925) with the Spock plugin installed
 
 ## [1.0.0] - 2024-03-23
 
