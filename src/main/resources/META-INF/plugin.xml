@@ -8,6 +8,11 @@
                 Provides support for the amazing <a href="https://spockframework.org">Spock testing framework</a>.
             </p>
             <p>
+                Inspired by the <a href="https://plugins.jetbrains.com/plugin/7114-spock-framework-enhancements">Spock Framework Enhancements</a> plugin
+                which is <a href="https://github.com/cholick/idea-spock-enhancements/blob/master/README.md">not actively maintained</a>,
+                and does not fully function in the newest IntelliJ versions due to breaking API changes.
+            </p>
+            <p>
                 Features:
             </p>
             <ul>

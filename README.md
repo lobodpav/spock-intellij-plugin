@@ -1,6 +1,10 @@
 # Spock IntelliJ Plugin
 
 Provides support for the amazing [Spock testing framework](https://spockframework.org).
+
+Inspired by the [Spock Framework Enhancements](https://plugins.jetbrains.com/plugin/7114-spock-framework-enhancements) plugin
+which is [not actively maintained](https://github.com/cholick/idea-spock-enhancements/blob/master/README.md),
+and does not fully function in the newest IntelliJ versions due to breaking API changes.
                
 # Features
 
