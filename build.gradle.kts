@@ -35,6 +35,7 @@ dependencies {
     intellijPlatform {
         // The version of the IntelliJ Platform IDE that will be used to build the plugin.
         // Also dictates the minimum version of the IDE that the plugin will be compatible with because the `ideaVersion.sinceBuild` is not defined.
+        // Run `gradle printProductsReleases` to find out the latest production release as well as an EAP release.
         intellijIdeaCommunity("2024.2")
         instrumentationTools()
         pluginVerifier()
@@ -66,12 +67,22 @@ tasks {
         }
     }
 
+    runIde {
+        jvmArgumentProviders += CommandLineArgumentProvider {
+            listOf("-Didea.kotlin.plugin.use.k2=true")
+        }
+    }
+
     test {
         useJUnitPlatform()
 
         testLogging {
             events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.SKIPPED)
             exceptionFormat = TestExceptionFormat.FULL
+        }
+
+        jvmArgumentProviders += CommandLineArgumentProvider {
+            listOf("-Didea.kotlin.plugin.use.k2=true")
         }
 
         // A reference to the `IntelliJ Community` sources that contains a bundled mockJDK.

@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2024-??-??
 
+### Added
+
+- Support for [K2 mode](https://kotlin.github.io/analysis-api/declaring-k2-compatibility.html). Note: `Go To Test` works since IntelliJ IDEA `2024.3` (see [KTIJ-31059](https://youtrack.jetbrains.com/issue/KTIJ-31059)). 
+
 ### Fixed
 
 - It was not possible to create a Specification in the default package (i.e. without a package declaration)
