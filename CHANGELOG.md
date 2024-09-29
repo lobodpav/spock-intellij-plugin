@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2024-??-??
 
+### Removed
+
+- Support for IntelliJ IDEA `2024.1.x` and older. I.e. the plugin now requires IntelliJ IDEA `2024.2` or newer.
+
 ## [1.0.1] - 2024-06-09
 
 ### Fixed

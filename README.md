@@ -25,15 +25,17 @@ For more details, see the [plugin page](https://plugins.jetbrains.com/plugin/233
     export INTELLIJ_CERTIFICATE_CHAIN = "The content of the certificate"
     export INTELLIJ_PRIVATE_KEY       = "The content of the private key"
     export INTELLIJ_PRIVATE_PASSWORD  = "The password to the private key"
+    export INTELLIJ_PUBLISH_TOKEN     = "The token for plugin publishing to JetBrains Marketplace"
     ```
-3. Run `gradle runIde` to execute an IntelliJ instance with the plugin installed.  
+3. Run `gradle runIde` to execute an IntelliJ instance with the plugin installed.
+4. Run `gradle buildPlugin` to build the plugin and prepare the distribution ZIP archive.
                 
 # Verification
               
 Verifies the plugin, its configuration and binary compatibility.
      
 ```shell
-gradle runPluginVerifier
+gradle verifyPlugin
 ```
 
 # Signing
@@ -48,7 +50,7 @@ gradle signPlugin
 2. Update
    - [CHANGELOG.md](CHANGELOG.md)
    - [plugin.xml](src/main/resources/META-INF/plugin.xml)
-3. Run `op run -- gradle build runPluginVerifier signPlugin publishPlugin`
+3. Run `op run -- gradle build verifyPlugin signPlugin publishPlugin`
 
 ## Security
 

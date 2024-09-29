@@ -53,8 +53,6 @@ class SpockLightProjectDescriptor : DefaultLightProjectDescriptor() {
         tempDirectory.refresh(false, false)
 
         val testRootDir = tempDirectory.findOrCreateDirectory(path)
-
-        registerSourceRoot(module.project, testRootDir)
         PsiTestUtil.addSourceRoot(module, testRootDir, testRoot)
 
         return testRootDir

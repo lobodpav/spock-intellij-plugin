@@ -1,31 +1,4 @@
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
-    <id>io.github.lobodpav.spock</id>
-    <name>Spock Framework Support</name>
-    <vendor>Pavel Lobodinský</vendor>
-    <description>
-        <![CDATA[
-            <p>
-                Provides support for the amazing <a href="https://spockframework.org">Spock testing framework</a>.
-            </p>
-            <p>
-                Inspired by the <a href="https://plugins.jetbrains.com/plugin/7114-spock-framework-enhancements">Spock Framework Enhancements</a> plugin
-                which is <a href="https://github.com/cholick/idea-spock-enhancements/blob/master/README.md">not actively maintained</a>,
-                and does not fully function in the newest IntelliJ versions due to breaking API changes.
-            </p>
-            <p>
-                Features:
-            </p>
-            <ul>
-                <li>Validation of block names, their order and completeness (e.g. invalid blocks, missing <code>then</code> blocks, etc.)</li>
-                <li>Creation of new Spock Specification using a <code>New File</code> action</li>
-                <li>Go To Test allows creation of Spock Specifications in Groovy, Java and Kotlin files</li>
-            </ul>
-            <p>
-                Stay tuned for more.
-            </li>
-        ]]>
-    </description>
-
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.java</depends>
