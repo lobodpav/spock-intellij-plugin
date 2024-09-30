@@ -54,4 +54,18 @@ class SpockForGroovyCreateTestActionIdeaSpec extends Specification {
         fileContent.indexOf("@interface Annotation") || new SourceClassInfo("foo.bar", "Annotation", "foo.bar.Annotation")
         fileContent.length() - 1                     || null
     }
+
+    def "Gets class information when a package is not defined"() {
+        given: "A file is created"
+        def psiFile = idea.loadFileContent("foo.bar.TestClass", "class TestClass {}", TestModule.ROOT, GROOVY_MAIN)
+
+        when: "The element at 0 caret position is retrieved"
+        def psiElement = psiFile.read { findElementAt(0) }
+
+        and:
+        def sourceClassInfo = action.readIt { it.getContainingClassOrNull(psiElement) }
+
+        then: "The qualified name is the same as the class name"
+        sourceClassInfo == new SourceClassInfo("", "TestClass", "TestClass")
+    }
 }

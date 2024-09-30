@@ -53,9 +53,13 @@ class ProjectExtensionsIdeaSpec extends Specification {
 
         and: "The created Spec contains the new Spec class"
         verifyAll(virtualFile.inputStream.text) {
-            it =~ "package $destinationPackage"
-            it =~ "import $fqSuperClassName"
-            it =~ "class $className extends $superClassName \\{"
+            it.startsWith("""
+                package $destinationPackage
+
+                import $fqSuperClassName
+
+                class $className extends $superClassName {
+                """.stripIndent().trim())
         }
 
         where:
@@ -63,5 +67,34 @@ class ProjectExtensionsIdeaSpec extends Specification {
         "MyTestClass1" | ROOT    | "foo.bar.baz"      | "i.am.abstract.CustomSpec"
         "MyTestClass2" | MODULE1 | "test"             | "spock.lang.Specification"
         "MyTestClass3" | MODULE2 | "test"             | "Spec"
+    }
+
+    def "Creates a Specification without a root package specified"() {
+        given: "Assemble an output from the dialog window once the user hits the OK button"
+        def dialogOutput = new CreateSpecificationDialogOutput("ATest", idea.getTestSourceRoot(ROOT), "", "spock.lang.Specification")
+
+        when: "The new Spec creation is initiated"
+        invokeWriteAction { ProjectExtensionsKt.createSpecification(idea.project, dialogOutput) }
+
+        and: "The created Spec file is loaded"
+        def virtualFile = idea.findVirtualFile("${GROOVY_TEST.path}/ATest.groovy")
+
+
+        /*
+            Note: The created file is opened in real IntelliJ editor, but cannot be verified in tests since the
+                  `com.intellij.mock.Mock.MyFileEditorManager.openTextEditor` is mocked and does nothing.
+         */
+        then: "The Spec was created"
+        virtualFile
+
+        and: "The created Spec contains the new Spec class without in the default package"
+        verifyAll(virtualFile.inputStream.text) {
+            !it.find("package")
+            it.startsWith("""
+                import spock.lang.Specification
+
+                class ATest extends Specification {
+                """.stripIndent().trim())
+        }
     }
 }

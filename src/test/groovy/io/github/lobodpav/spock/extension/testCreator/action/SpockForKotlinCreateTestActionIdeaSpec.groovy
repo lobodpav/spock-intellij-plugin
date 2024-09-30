@@ -63,4 +63,18 @@ class SpockForKotlinCreateTestActionIdeaSpec extends Specification {
         fileContent.indexOf("annotation class TestAnnotation") || new SourceClassInfo("foo.bar", "TestAnnotation", "foo.bar.TestAnnotation")
         fileContent.length() - 1                               || new SourceClassInfo("foo.bar", "TestKt", "foo.bar.TestKt")
     }
+
+    def "Gets class information when a package is not defined"() {
+        given: "A file is created"
+        def psiFile = idea.loadFileContent("foo.bar.TestClass", "class TestClass", TestModule.ROOT, KOTLIN_MAIN)
+
+        when: "The element at 0 caret position is retrieved"
+        def psiElement = psiFile.read { findElementAt(0) }
+
+        and:
+        def sourceClassInfo = action.readIt { it.getContainingClassOrNull(psiElement) }
+
+        then: "The qualified name is the same as the class name"
+        sourceClassInfo == new SourceClassInfo("", "TestClass", "TestClass")
+    }
 }

@@ -100,6 +100,8 @@ class CreateSpecificationDialog(
                     .align(Align.FILL)
                     .bindText(dialogModel::destinationPackage)
                     .validationOnInput {
+                        // Blank package name is allowed and will create a specification in the default package (i.e. in the `src/test/groovy/` directory)
+                        if (it.text.isBlank()) return@validationOnInput null
                         packageValidator.getErrorText(it.text)?.let { message -> error(message) }
                     }
             }

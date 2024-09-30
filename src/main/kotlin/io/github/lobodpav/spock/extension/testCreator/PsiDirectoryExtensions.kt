@@ -13,8 +13,10 @@ import com.intellij.util.IncorrectOperationException
  *
  * @throws com.intellij.util.IncorrectOperationException
  */
-fun PsiDirectory.createPackage(packageName: String): PsiDirectory =
-    WriteAction.compute<PsiDirectory, IncorrectOperationException> {
+fun PsiDirectory.createPackage(packageName: String): PsiDirectory {
+   if (packageName.isBlank()) return this
+
+    return WriteAction.compute<PsiDirectory, IncorrectOperationException> {
         var currentDirectory = this
 
         packageName.splitToSequence(".").forEach {
@@ -23,3 +25,4 @@ fun PsiDirectory.createPackage(packageName: String): PsiDirectory =
 
         currentDirectory
     }
+}
