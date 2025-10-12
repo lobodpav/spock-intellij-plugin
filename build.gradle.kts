@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "io.github.lobodpav"
-version = "1.1.0"
+version = "1.2.0"
 
 repositories {
     mavenCentral()
@@ -36,8 +36,7 @@ dependencies {
         // The version of the IntelliJ Platform IDE that will be used to build the plugin.
         // Also dictates the minimum version of the IDE that the plugin will be compatible with because the `ideaVersion.sinceBuild` is not defined.
         // Run `gradle printProductsReleases` to find out the latest production release as well as an EAP release.
-        intellijIdeaCommunity("2024.2")
-        instrumentationTools()
+        create("IC", "2025.2")
         pluginVerifier()
         zipSigner()
 
